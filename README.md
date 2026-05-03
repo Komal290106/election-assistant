@@ -17,7 +17,7 @@ A production-quality, single-page civic AI web application that educates citizen
 | **Quick FAQ** | 5 offline pre-written Q&A pairs — works without any API key |
 | **Find Booth** | Google Maps embed or fallback to Maps search |
 
-### v2 Enhancements
+###  Enhancements
 | Feature | Implementation |
 |---|---|
 | **Country Selector** | Dropdown (India / USA / UK / General) — switches the AI system prompt context |
