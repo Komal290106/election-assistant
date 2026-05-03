@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Election Assistant — learn how elections work, explore timelines, ask AI questions, and find your polling booth. Supports India, USA, UK and general elections." />
+  <meta name="theme-color" content="#0a0f1e" />
+  <meta name="keywords" content="election, voting, EVM, NOTA, ECI, voter registration, polling booth, civic education" />
+  <title>Election Assistant — Civic AI Platform</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+
+  <!-- ── ANIMATED BACKGROUND ── -->
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- ── HEADER ── -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <div class="header-brand">
+        <div class="brand-logo" aria-hidden="true">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="36" height="36" rx="10" fill="url(#brandGrad)" />
+            <path d="M10 24V14l8-5 8 5v10H10z" fill="white" fill-opacity="0.15" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+            <rect x="15" y="18" width="6" height="6" rx="1" fill="white" fill-opacity="0.9"/>
+            <path d="M18 9v2M13 11.5l1.5 1.5M23 11.5l-1.5 1.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="brandGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#3d6bff"/>
+                <stop offset="1" stop-color="#6c3dff"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">Election<em>AI</em></span>
+          <span class="brand-tagline">Civic Education Platform</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Country Selector -->
+        <div class="country-selector-wrap">
+          <label for="country-select" class="visually-hidden">Select country context</label>
+          <div class="country-select-field">
+            <span class="country-select-icon" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </span>
+            <select id="country-select" class="country-select" aria-label="Select country for election context">
+              <option value="India">India</option>
+              <option value="USA">USA</option>
+              <option value="UK">UK</option>
+              <option value="General">General</option>
+            </select>
+            <span class="country-select-arrow" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </div>
+        </div>
+
+        <!-- Hindi Toggle -->
+        <button class="hindi-toggle" id="hindi-toggle" aria-pressed="false" title="Respond in Hindi">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg>
+          <span>हिंदी</span>
+        </button>
+
+        <div class="header-badges">
+          <span class="badge badge-groq">
+            <span class="badge-dot"></span>
+            Groq AI
+          </span>
+          <span class="badge badge-maps">
+            <span class="badge-dot"></span>
+            Google Maps
+          </span>
+        </div>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle navigation" aria-expanded="false" aria-controls="main-nav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── MAIN ── -->
+  <main id="main" class="main-layout">
+
+    <!-- ── SIDEBAR NAV ── -->
+    <nav class="sidebar-nav" id="main-nav" role="navigation" aria-label="Main navigation">
+      <ul role="tablist" aria-label="Election sections">
+        <li>
+          <button class="nav-item active" role="tab" aria-selected="true" aria-controls="panel-steps"
+            data-tab="steps" id="tab-steps">
+            <span class="nav-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </span>
+            <span class="nav-label">How It Works</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" role="tab" aria-selected="false" aria-controls="panel-timeline"
+            data-tab="timeline" id="tab-timeline">
+            <span class="nav-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </span>
+            <span class="nav-label">Timeline</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" role="tab" aria-selected="false" aria-controls="panel-chat"
+            data-tab="chat" id="tab-chat">
+            <span class="nav-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </span>
+            <span class="nav-label">Ask AI</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" role="tab" aria-selected="false" aria-controls="panel-faq"
+            data-tab="faq" id="tab-faq">
+            <span class="nav-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </span>
+            <span class="nav-label">Quick FAQ</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item" role="tab" aria-selected="false" aria-controls="panel-map"
+            data-tab="map" id="tab-map">
+            <span class="nav-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </span>
+            <span class="nav-label">Find Booth</span>
+          </button>
+        </li>
+      </ul>
+
+      <div class="nav-footer">
+        <p class="nav-footer-text">Built for PromptWars<br/>Hack2Skill Challenge</p>
+      </div>
+    </nav>
+
+    <!-- ── CONTENT PANELS ── -->
+    <div class="content-area">
+
+      <!-- ══════════════════════════════════
+           PANEL 1 — HOW IT WORKS
+      ══════════════════════════════════ -->
+      <section id="panel-steps" class="panel active" role="tabpanel" aria-labelledby="tab-steps">
+
+        <header class="panel-header">
+          <div class="panel-header-eyebrow">Democracy 101</div>
+          <h2 class="panel-title">How Elections Work</h2>
+          <p class="panel-subtitle">Six essential phases every citizen should understand</p>
+        </header>
+
+        <div class="steps-grid">
+
+          <article class="step-card" tabindex="0" aria-label="Step 1: Voter Registration">
+            <div class="step-card-inner">
+              <div class="step-number" aria-hidden="true">01</div>
+              <div class="step-tag tag-urgent">Do this first</div>
+              <div class="step-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              </div>
+              <h3>Voter Registration</h3>
+              <p>Citizens must register before an election using a valid government ID and proof of residence. In India, apply via voters.eci.gov.in or your local BLO. Your EPIC (Voter ID) card is your primary voting credential.</p>
+            </div>
+            <div class="step-card-glow" aria-hidden="true"></div>
+          </article>
+
+          <article class="step-card" tabindex="0" aria-label="Step 2: Candidate Nominations">
+            <div class="step-card-inner">
+              <div class="step-number" aria-hidden="true">02</div>
+              <div class="step-tag tag-info">Before voting</div>
+              <div class="step-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <h3>Candidate Nominations</h3>
+              <p>Political parties or independent candidates file nomination papers within a defined window. The Election Commission of India (ECI) scrutinizes eligibility — including criminal disclosures — before approving the final ballot.</p>
+            </div>
+            <div class="step-card-glow" aria-hidden="true"></div>
+          </article>
+
+          <article class="step-card" tabindex="0" aria-label="Step 3: Campaigning Period">
+            <div class="step-card-inner">
+              <div class="step-number" aria-hidden="true">03</div>
+              <div class="step-tag tag-info">Public phase</div>
+              <div class="step-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              </div>
+              <h3>Campaigning Period</h3>
+              <p>Approved candidates campaign within legally defined periods and spending limits. The Model Code of Conduct (MCC) governs all parties. Campaigning must stop 48 hours before polling day — the "Silent Period."</p>
+            </div>
+            <div class="step-card-glow" aria-hidden="true"></div>
+          </article>
+
+          <article class="step-card step-card-featured" tabindex="0" aria-label="Step 4: Voting Day — Main Event">
+            <div class="step-card-inner">
+              <div class="step-number" aria-hidden="true">04</div>
+              <div class="step-tag tag-success">Main event</div>
+              <div class="step-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <h3>Voting Day</h3>
+              <p>Bring your EPIC card and booth slip to vote via EVM (Electronic Voting Machine). Booths open 7am–6pm. You may use NOTA — None of the Above — if you find no candidate suitable. Your vote is completely secret.</p>
+            </div>
+            <div class="step-card-glow" aria-hidden="true"></div>
+          </article>
+
+          <article class="step-card" tabindex="0" aria-label="Step 5: Vote Counting and Results">
+            <div class="step-card-inner">
+              <div class="step-number" aria-hidden="true">05</div>
+              <div class="step-tag tag-success">Democratic outcome</div>
+              <div class="step-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              </div>
+              <h3>Vote Counting &amp; Results</h3>
+              <p>VVPAT slips allow paper-trail verification of EVM results. Votes are counted and tallied under official supervision with party agents present. Results are declared once all counts are certified by the Returning Officer.</p>
+            </div>
+            <div class="step-card-glow" aria-hidden="true"></div>
+          </article>
+
+          <article class="step-card" tabindex="0" aria-label="Step 6: Swearing In and Transition">
+            <div class="step-card-inner">
+              <div class="step-number" aria-hidden="true">06</div>
+              <div class="step-tag tag-success">Democracy complete</div>
+              <div class="step-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              </div>
+              <h3>Swearing In &amp; Transition</h3>
+              <p>Elected officials take office through an official swearing-in ceremony administered by the President or Governor. The outgoing government ensures a smooth, constitutional handover of power.</p>
+            </div>
+            <div class="step-card-glow" aria-hidden="true"></div>
+          </article>
+
+        </div>
+
+        <!-- Quick CTA -->
+        <div class="cta-bar">
+          <p>Have questions about any step?</p>
+          <button class="cta-btn" onclick="switchTab('chat', this)">
+            Ask the AI Assistant
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- ══════════════════════════════════
+           PANEL 2 — TIMELINE
+      ══════════════════════════════════ -->
+      <section id="panel-timeline" class="panel" role="tabpanel" aria-labelledby="tab-timeline">
+
+        <header class="panel-header">
+          <div class="panel-header-eyebrow">From Start to Finish</div>
+          <h2 class="panel-title">Election Timeline</h2>
+          <p class="panel-subtitle">A typical election cycle from announcement to sworn-in officials</p>
+        </header>
+
+        <div class="timeline-wrap">
+          <div class="timeline" role="list" aria-label="Election timeline">
+
+            <div class="tl-item tl-done" role="listitem">
+              <div class="tl-connector" aria-hidden="true">
+                <div class="tl-dot">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6L9 17l-5-5"/></svg>
+                </div>
+              </div>
+              <div class="tl-content">
+                <span class="tl-date">6–12 months before</span>
+                <h3 class="tl-title">Election Announced</h3>
+                <p class="tl-desc">Official election date declared by the ECI via a press conference. The Model Code of Conduct comes into immediate effect. Political parties begin candidate selection through their internal processes.</p>
+              </div>
+            </div>
+
+            <div class="tl-item tl-done" role="listitem">
+              <div class="tl-connector" aria-hidden="true">
+                <div class="tl-dot">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6L9 17l-5-5"/></svg>
+                </div>
+              </div>
+              <div class="tl-content">
+                <span class="tl-date">4–6 months before</span>
+                <h3 class="tl-title">Voter Registration Opens</h3>
+                <p class="tl-desc">Citizens can register or update their voter details via voters.eci.gov.in, the Voter Helpline App, or their local BLO (Booth Level Officer). EPIC cards are issued to new registrants.</p>
+              </div>
+            </div>
+
+            <div class="tl-item tl-done" role="listitem">
+              <div class="tl-connector" aria-hidden="true">
+                <div class="tl-dot">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6L9 17l-5-5"/></svg>
+                </div>
+              </div>
+              <div class="tl-content">
+                <span class="tl-date">3–4 months before</span>
+                <h3 class="tl-title">Candidate Nominations</h3>
+                <p class="tl-desc">Parties and independents file nomination papers with the Returning Officer. The election body scrutinizes affidavits (criminal records, assets) and approves valid candidates for the final ballot.</p>
+              </div>
+            </div>
+
+            <div class="tl-item tl-done" role="listitem">
+              <div class="tl-connector" aria-hidden="true">
+                <div class="tl-dot">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6L9 17l-5-5"/></svg>
+                </div>
+              </div>
+              <div class="tl-content">
+                <span class="tl-date">2–3 months before</span>
+                <h3 class="tl-title">Campaign Period Begins</h3>
+                <p class="tl-desc">Candidates actively campaign across constituencies. Model Code of Conduct is strictly enforced — spending limits and conduct rules apply. Campaign finance is audited by Election Commission observers.</p>
+              </div>
+            </div>
+
+            <div class="tl-item tl-done" role="listitem">
+              <div class="tl-connector" aria-hidden="true">
+                <div class="tl-dot">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6L9 17l-5-5"/></svg>
+                </div>
+              </div>
+              <div class="tl-content">
+                <span class="tl-date">48 hours before</span>
+                <h3 class="tl-title">Silent Period Begins</h3>
+                <p class="tl-desc">All campaigning, advertising and public meetings must stop 48 hours before polls open. Voter slips (booth slip) have been distributed to registered citizens. Check your booth location now.</p>
+              </div>
+            </div>
+
+            <div class="tl-item tl-active" role="listitem">
+              <div class="tl-connector" aria-hidden="true">
+                <div class="tl-dot tl-dot-pulse">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/></svg>
+                </div>
+              </div>
+              <div class="tl-content">
+                <span class="tl-date">Election Day</span>
+                <h3 class="tl-title">Polls Open <span class="tl-live-badge">Live</span></h3>
+                <p class="tl-desc">Registered voters cast ballots via EVM at designated booths. Booths open 7am to 6pm. Bring your EPIC Voter ID card. VVPAT machines print a slip confirming your vote. NOTA is always an option.</p>
+              </div>
+            </div>
+
+            <div class="tl-item" role="listitem">
+              <div class="tl-connector" aria-hidden="true">
+                <div class="tl-dot tl-dot-future">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+              </div>
+              <div class="tl-content">
+                <span class="tl-date">After voting</span>
+                <h3 class="tl-title">Results &amp; Swearing In</h3>
+                <p class="tl-desc">Votes are counted under party observers' watch, VVPAT results verified, and winner announced by the Returning Officer. New government sworn in by the President / Governor. Democracy complete.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ══════════════════════════════════
+           PANEL 3 — AI CHAT
+      ══════════════════════════════════ -->
+      <section id="panel-chat" class="panel panel-chat-layout" role="tabpanel" aria-labelledby="tab-chat">
+
+        <header class="panel-header">
+          <div class="panel-header-eyebrow">Powered by Groq AI</div>
+          <h2 class="panel-title">Ask the AI</h2>
+          <p class="panel-subtitle">Election questions answered in plain language — instantly</p>
+        </header>
+
+        <div class="chat-shell" aria-label="AI chat interface">
+
+          <!-- Toolbar: country + hindi indicator -->
+          <div class="chat-toolbar">
+            <div class="chat-context-tag" id="chat-context-tag" aria-live="polite">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              Context: <strong id="ctx-country-label">India</strong>
+            </div>
+            <div class="chat-toolbar-right">
+              <span class="hindi-active-badge" id="hindi-badge" style="display:none" aria-live="polite">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg>
+                हिंदी मोड
+              </span>
+            </div>
+          </div>
+
+          <!-- Quick question chips -->
+          <div class="quick-chips" role="group" aria-label="Quick question suggestions">
+            <p class="chips-label">Suggested questions:</p>
+            <div class="chips-row">
+              <button class="chip" onclick="quickAsk('How do I register to vote in India and what is the EPIC card?')">EPIC / Voter ID</button>
+              <button class="chip" onclick="quickAsk('What documents do I need to vote at the polling booth?')">Documents needed</button>
+              <button class="chip" onclick="quickAsk('How does the EVM Electronic Voting Machine work?')">How EVMs work</button>
+              <button class="chip" onclick="quickAsk('What is NOTA and how do I use it?')">What is NOTA?</button>
+              <button class="chip" onclick="quickAsk('How do I find my polling booth and constituency?')">Find my booth</button>
+              <button class="chip" onclick="quickAsk('What is the Model Code of Conduct in Indian elections?')">Model Code of Conduct</button>
+              <button class="chip" onclick="quickAsk('What is a booth slip and how do I get one?')">Booth slip</button>
+              <button class="chip" onclick="quickAsk('What are my rights as a voter?')">My voter rights</button>
+            </div>
+          </div>
+
+          <!-- Messages -->
+          <div class="chat-messages" id="chat-messages" role="log" aria-live="polite" aria-label="Chat conversation" aria-atomic="false">
+            <div class="msg msg-bot">
+              <div class="msg-avatar" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+              <div class="msg-content">
+                <div class="msg-meta">
+                  <span class="msg-sender">ElectionAI</span>
+                  <span class="msg-time" id="welcome-time"></span>
+                </div>
+                <div class="msg-bubble">
+                  <p>Hello! I'm your Election Assistant, powered by Groq AI.</p>
+                  <p>Ask me anything about elections — how to register, what documents you need, how EVMs work, what NOTA means, how to find your booth, or anything about the democratic process.</p>
+                  <p>Use the country selector in the header to get context-specific answers for India, USA, UK, or general elections.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Input bar -->
+          <div class="chat-input-area">
+            <div class="chat-input-bar">
+              <textarea
+                id="chat-input"
+                class="chat-input"
+                placeholder="Ask a question about elections… (Press Enter to send)"
+                aria-label="Type your election question"
+                rows="1"
+                maxlength="600"
+              ></textarea>
+              <button class="btn-send" id="send-btn" aria-label="Send message" title="Send (Enter)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+              </button>
+            </div>
+            <p class="chat-hint">Press <kbd>Enter</kbd> to send · <kbd>Shift+Enter</kbd> for new line · <kbd>Ctrl+K</kbd> to focus</p>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ══════════════════════════════════
+           PANEL 4 — OFFLINE FAQ
+      ══════════════════════════════════ -->
+      <section id="panel-faq" class="panel" role="tabpanel" aria-labelledby="tab-faq">
+
+        <header class="panel-header">
+          <div class="panel-header-eyebrow">No API Key Needed</div>
+          <h2 class="panel-title">Quick FAQ</h2>
+          <p class="panel-subtitle">Common election questions answered — works even without an AI key</p>
+        </header>
+
+        <div class="faq-list" role="list">
+
+          <details class="faq-item" role="listitem">
+            <summary class="faq-question">
+              <span class="faq-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              </span>
+              <span>How do I register to vote in India?</span>
+              <span class="faq-chevron" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </span>
+            </summary>
+            <div class="faq-answer">
+              <p>You can register online at <strong>voters.eci.gov.in</strong> or via the <strong>Voter Helpline App</strong>. You need to be at least 18 years old and an Indian citizen. Required documents: Aadhaar card or any government-issued photo ID, and proof of residence (utility bill, ration card, bank passbook).</p>
+              <p>After registering, you will receive an <strong>EPIC card</strong> (Electors Photo Identity Card) — your official Voter ID. You can also check your registration status by calling the Voter Helpline at <strong>1950</strong>.</p>
+              <div class="faq-share">
+                <button class="btn-share" onclick="shareAnswer(this)" data-text="How to register to vote in India: Visit voters.eci.gov.in or use the Voter Helpline App. You need to be 18+, an Indian citizen, and have a government ID + address proof. After registering you get an EPIC (Voter ID) card. Voter Helpline: 1950. #ElectionAssistant">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                  Share via WhatsApp
+                </button>
+              </div>
+            </div>
+          </details>
+
+          <details class="faq-item" role="listitem">
+            <summary class="faq-question">
+              <span class="faq-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </span>
+              <span>How does an EVM (Electronic Voting Machine) work?</span>
+              <span class="faq-chevron" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </span>
+            </summary>
+            <div class="faq-answer">
+              <p>An EVM consists of two units: the <strong>Control Unit</strong> (operated by the Presiding Officer) and the <strong>Ballot Unit</strong> (pressed by the voter). The ballot unit lists candidates with symbols and corresponding blue buttons.</p>
+              <p>When you press a button, a beep confirms your vote and the machine locks — preventing double voting. EVMs are standalone devices with no internet connection, making them tamper-resistant. A <strong>VVPAT</strong> (Voter Verified Paper Audit Trail) machine prints a paper slip showing your vote, visible through a glass window for 7 seconds as a receipt.</p>
+              <div class="faq-share">
+                <button class="btn-share" onclick="shareAnswer(this)" data-text="How EVM works in India: Press the button next to your candidate on the Ballot Unit. A beep confirms your vote and the machine locks. A VVPAT slip shows your vote for 7 seconds as paper verification. EVMs have no internet — they are tamper-resistant standalone devices. #ElectionAssistant">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                  Share via WhatsApp
+                </button>
+              </div>
+            </div>
+          </details>
+
+          <details class="faq-item" role="listitem">
+            <summary class="faq-question">
+              <span class="faq-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </span>
+              <span>What is NOTA and when should I use it?</span>
+              <span class="faq-chevron" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </span>
+            </summary>
+            <div class="faq-answer">
+              <p><strong>NOTA</strong> stands for "None of the Above." It appears as the last option on the EVM ballot with a standardized symbol (a ballot paper with a cross). Introduced by the Supreme Court in 2013, it lets voters formally reject all candidates without abstaining from voting.</p>
+              <p>Important: NOTA votes are counted and published, but they do not affect the outcome — the candidate with the most votes still wins, even if NOTA gets more votes in that constituency. It is a tool for <strong>expressing civic dissatisfaction</strong> on record.</p>
+              <div class="faq-share">
+                <button class="btn-share" onclick="shareAnswer(this)" data-text="What is NOTA in Indian elections: NOTA (None of the Above) is the last button on the EVM. It lets you reject ALL candidates formally. Introduced by the Supreme Court in 2013. NOTA votes are counted but do NOT change the result — the highest vote-getter still wins. It's a protest vote on record. #ElectionAssistant">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                  Share via WhatsApp
+                </button>
+              </div>
+            </div>
+          </details>
+
+          <details class="faq-item" role="listitem">
+            <summary class="faq-question">
+              <span class="faq-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </span>
+              <span>How do I find my polling booth and constituency?</span>
+              <span class="faq-chevron" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </span>
+            </summary>
+            <div class="faq-answer">
+              <p>You can find your polling booth in three ways:</p>
+              <p><strong>1. Online:</strong> Visit <strong>electoralsearch.eci.gov.in</strong> and enter your name, EPIC number, or Aadhaar details to get your booth address and part number.</p>
+              <p><strong>2. Booth Slip:</strong> The Election Commission distributes a voter slip (booth slip) to every registered voter before election day — it includes your booth address, part number, and serial number in the voter roll.</p>
+              <p><strong>3. Helpline:</strong> Call <strong>1950</strong> (toll-free Voter Helpline) to get your booth details over the phone.</p>
+              <div class="faq-share">
+                <button class="btn-share" onclick="shareAnswer(this)" data-text="How to find your polling booth in India: (1) Visit electoralsearch.eci.gov.in and enter your name or EPIC number (2) Check your voter slip / booth slip delivered before election day (3) Call Voter Helpline 1950 (toll-free). #ElectionAssistant">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                  Share via WhatsApp
+                </button>
+              </div>
+            </div>
+          </details>
+
+          <details class="faq-item" role="listitem">
+            <summary class="faq-question">
+              <span class="faq-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </span>
+              <span>What is the Model Code of Conduct (MCC)?</span>
+              <span class="faq-chevron" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </span>
+            </summary>
+            <div class="faq-answer">
+              <p>The <strong>Model Code of Conduct</strong> is a set of guidelines issued by the Election Commission of India that comes into effect the moment an election is announced. It applies to all political parties, candidates, and the ruling government.</p>
+              <p>Key rules: No new government schemes or announcements that influence voters. No use of government machinery for campaigns. No hate speech or appeals based on religion/caste. Polling day is a paid holiday. Campaign must stop 48 hours before voting. Violations can be reported to the ECI or via the <strong>cVIGIL app</strong> with photo/video evidence.</p>
+              <div class="faq-share">
+                <button class="btn-share" onclick="shareAnswer(this)" data-text="Model Code of Conduct (MCC) in Indian elections: Issued by ECI the moment elections are announced. Key rules — no new government schemes, no using govt machinery for campaigns, no hate speech. Campaigning must stop 48 hours before voting. Report violations on the cVIGIL app. #ElectionAssistant">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                  Share via WhatsApp
+                </button>
+              </div>
+            </div>
+          </details>
+
+        </div>
+
+        <div class="cta-bar" style="margin-top: 2rem;">
+          <p>Want more detailed answers?</p>
+          <button class="cta-btn" onclick="switchTab('chat')">
+            Ask the AI Assistant
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- ══════════════════════════════════
+           PANEL 5 — MAP
+      ══════════════════════════════════ -->
+      <section id="panel-map" class="panel" role="tabpanel" aria-labelledby="tab-map">
+
+        <header class="panel-header">
+          <div class="panel-header-eyebrow">Locate Nearby</div>
+          <h2 class="panel-title">Find Your Polling Booth</h2>
+          <p class="panel-subtitle">Search by city or pincode to locate voting centres and election offices</p>
+        </header>
+
+        <!-- Search controls -->
+        <div class="map-controls">
+          <div class="map-search-wrap">
+            <label for="map-input" class="visually-hidden">Search location</label>
+            <div class="map-search-field">
+              <span class="map-search-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </span>
+              <input
+                type="text"
+                id="map-input"
+                class="map-search-input"
+                placeholder="Enter city, state or pincode (e.g. Delhi, Mumbai, 400001)"
+                aria-label="Search location for polling booths"
+              />
+              <button class="map-clear-btn" id="map-clear" aria-label="Clear search" style="display:none">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+            <button class="btn-map-search" id="map-search-btn" aria-label="Search for polling booths">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              Search
+            </button>
+          </div>
+
+          <div class="map-type-pills" role="group" aria-label="Location type filter">
+            <button class="map-pill active" data-type="booth" aria-pressed="true">Polling Booths</button>
+            <button class="map-pill" data-type="office" aria-pressed="false">Election Commission</button>
+            <button class="map-pill" data-type="both" aria-pressed="false">Both</button>
+          </div>
+        </div>
+
+        <!-- Map frame -->
+        <div class="map-frame-wrap" id="map-frame-wrap">
+          <div class="map-loading" id="map-loading" style="display:none" aria-live="polite">
+            <div class="map-spinner" aria-hidden="true"></div>
+            <p>Loading map…</p>
+          </div>
+
+          <div class="map-placeholder" id="map-placeholder" aria-live="polite">
+            <div class="map-placeholder-inner">
+              <div class="map-placeholder-icon" aria-hidden="true">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <h3>Find Nearby Polling Locations</h3>
+              <p>Enter your city or pincode above to see polling booths and election commission offices near you on an interactive map.</p>
+              <div class="map-hint-pills">
+                <button class="map-hint-chip" onclick="fillAndSearch('New Delhi')">New Delhi</button>
+                <button class="map-hint-chip" onclick="fillAndSearch('Mumbai')">Mumbai</button>
+                <button class="map-hint-chip" onclick="fillAndSearch('Bangalore')">Bangalore</button>
+                <button class="map-hint-chip" onclick="fillAndSearch('Chennai')">Chennai</button>
+                <button class="map-hint-chip" onclick="fillAndSearch('Kolkata')">Kolkata</button>
+                <button class="map-hint-chip" onclick="fillAndSearch('Hyderabad')">Hyderabad</button>
+              </div>
+            </div>
+          </div>
+
+          <iframe
+            id="map-frame"
+            class="map-iframe"
+            style="display:none"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Interactive polling booth locator map"
+            src="about:blank"
+          ></iframe>
+
+          <!-- Open in maps fallback -->
+          <div class="map-fallback-bar" id="map-fallback-bar" style="display:none">
+            <span>Map opened in new tab</span>
+            <a id="map-fallback-link" href="#" target="_blank" rel="noopener noreferrer" class="map-fallback-link">
+              Open in Google Maps
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </div>
+        </div>
+
+      </section>
+
+    </div><!-- .content-area -->
+  </main>
+
+  <!-- ── FOOTER ── -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <p class="footer-brand">Election<em>AI</em></p>
+      <p class="footer-text">Built for PromptWars · Hack2Skill Challenge · Powered by Groq AI &amp; Google Maps</p>
+      <p class="footer-text footer-disclaimer">This platform is for civic education only. Always verify with your official election commission.</p>
+    </div>
+  </footer>
+
+  <!-- ── TOAST ── -->
+  <div id="toast-container" class="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+  <script src="index.js"></script>
+</body>
+</html>
