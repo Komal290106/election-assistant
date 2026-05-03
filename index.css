@@ -1395,6 +1395,8 @@ body {
   margin-left: var(--sidebar-width);
   border-top: 1px solid var(--color-border);
   padding: var(--space-6) var(--space-8);
+  /* Needs same top offset as .main-layout so it renders below the fixed header */
+  padding-top: var(--space-6);
 }
 
 .footer-inner {
@@ -2000,5 +2002,508 @@ body {
   .chat-toolbar {
     padding: var(--space-2) var(--space-4);
     font-size: 0.7rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   AUTH UI — append this block to the END of index.css
+═══════════════════════════════════════════════════════ */
+
+/* ── Auth Wrap ── */
+/* ══════════════════════════════════════════════════════
+   HEADER AUTH — single sign-in button + profile dropdown
+   All elements are in the static HTML (index.html).
+   No dynamic injection needed.
+══════════════════════════════════════════════════════ */
+
+/* Sign-in button (shown when logged out) */
+.btn-signin-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-full);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+}
+.btn-signin-header:hover {
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+}
+.btn-signin-header:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ── User profile wrap (shown when logged in) ── */
+.user-profile-wrap {
+  position: relative;
+  display: none; /* shown via JS after login */
+  align-items: center;
+}
+
+.user-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 4px;
+  background: rgba(77, 123, 255, 0.1);
+  border: 1px solid rgba(77, 123, 255, 0.25);
+  border-radius: var(--radius-full);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  white-space: nowrap;
+  max-width: 200px;
+}
+.user-profile-btn:hover {
+  background: rgba(77, 123, 255, 0.18);
+  border-color: rgba(77, 123, 255, 0.4);
+  box-shadow: 0 0 0 3px rgba(77, 123, 255, 0.12);
+}
+.user-profile-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(77, 123, 255, 0.5);
+}
+
+.user-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+  font-size: 0.82rem;
+}
+
+.user-chevron {
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+  transition: transform var(--transition-fast);
+}
+.user-profile-btn[aria-expanded="true"] .user-chevron {
+  transform: rotate(180deg);
+}
+
+/* ── User dropdown ── */
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 280px;
+  background: linear-gradient(160deg, #0e1530 0%, #141c38 100%);
+  border: 1px solid rgba(77, 123, 255, 0.2);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  padding: var(--space-4);
+  z-index: 500;
+  opacity: 0;
+  transform: translateY(-8px) scale(0.97);
+  pointer-events: none;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+.user-dropdown.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.user-dropdown-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0 var(--space-3);
+}
+
+.user-dropdown-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(77, 123, 255, 0.15);
+}
+
+.user-dropdown-name {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-dropdown-email {
+  font-size: 0.74rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+.user-dropdown-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+  margin: var(--space-3) 0;
+  border: none;
+}
+
+.user-dropdown-google-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  padding: var(--space-2) var(--space-3);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-2);
+}
+
+.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+  text-align: left;
+  border: 1px solid transparent;
+}
+
+.user-dropdown-signout {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  margin-top: var(--space-1);
+}
+.user-dropdown-signout:hover {
+  background: rgba(239, 68, 68, 0.16);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* ── Auth loading spinner (in header) ── */
+.auth-loading {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+}
+.auth-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(77, 123, 255, 0.2);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Sidebar user section ── */
+.sidebar-user {
+  display: none; /* shown via JS when signed in */
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  margin-top: var(--space-4);
+  background: rgba(77, 123, 255, 0.08);
+  border: 1px solid rgba(77, 123, 255, 0.15);
+  border-radius: var(--radius-md);
+}
+.sidebar-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1.5px solid var(--color-accent);
+}
+.sidebar-user-info {
+  flex: 1;
+  min-width: 0;
+}
+.sidebar-user-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar-user-sub {
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+  margin-top: 1px;
+}
+.sidebar-signout-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-sm);
+  color: #f87171;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.sidebar-signout-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  .user-name { display: none; }
+  .user-profile-btn { padding: 4px; }
+  .user-dropdown { right: -10px; width: 260px; }
+}
+/* ══════════════════════════════════════════════════════
+   AUTH MODAL OVERLAY — Full-screen centered dialog
+   Must sit above header (z-index > 100), sidebar (z-index > 50)
+   and everything else on the page.
+══════════════════════════════════════════════════════ */
+
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 8, 20, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 16px;
+  animation: overlayFadeIn 0.2s ease;
+  /* Ensure isolation from all other stacking contexts */
+  isolation: isolate;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.auth-modal {
+  position: relative;
+  background: linear-gradient(160deg, #0e1530 0%, #121a38 100%);
+  border: 1px solid rgba(100, 130, 255, 0.18);
+  border-radius: 20px;
+  padding: 40px 36px 32px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  animation: modalSlideUp 0.25s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+/* Brand block at top */
+.auth-modal-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.brand-logo-sm {
+  flex-shrink: 0;
+}
+
+.auth-modal-appname {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.auth-modal-appname em {
+  font-style: italic;
+  background: linear-gradient(90deg, #5b8aff, #a67cff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.auth-modal-tagline {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(160, 175, 220, 0.7);
+  margin-top: 2px;
+}
+
+/* Heading + description */
+.auth-heading {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+
+.auth-description {
+  font-size: 0.875rem;
+  color: rgba(160, 175, 220, 0.8);
+  line-height: 1.55;
+  margin: 0 0 28px;
+}
+
+/* Google sign-in button */
+.btn-google-signin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 13px 20px;
+  background: #ffffff;
+  color: #1a1a2e;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn-google-signin:hover {
+  background: #f0f4ff;
+  box-shadow: 0 4px 20px rgba(80, 120, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-google-signin:active {
+  transform: translateY(0);
+}
+
+.btn-google-signin:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading + error inside modal */
+.auth-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 16px;
+  color: rgba(160, 175, 220, 0.8);
+  font-size: 0.875rem;
+}
+
+.auth-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(100, 140, 255, 0.25);
+  border-top-color: #5b8aff;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.auth-error {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(220, 60, 60, 0.12);
+  border: 1px solid rgba(220, 60, 60, 0.3);
+  border-radius: 8px;
+  color: #ff7575;
+  font-size: 0.83rem;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Disclaimer */
+.auth-disclaimer {
+  font-size: 0.75rem;
+  color: rgba(130, 150, 200, 0.6);
+  text-align: center;
+  margin: 20px 0 0;
+  line-height: 1.5;
+}
+
+.auth-firebase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: rgba(160, 175, 220, 0.75);
+}
+
+/* Skip / guest button */
+.auth-skip-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid rgba(100, 130, 255, 0.15);
+  border-radius: 8px;
+  color: rgba(160, 175, 220, 0.7);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.auth-skip-btn:hover {
+  background: rgba(100, 130, 255, 0.08);
+  border-color: rgba(100, 130, 255, 0.3);
+  color: rgba(200, 215, 255, 0.9);
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .auth-modal {
+    padding: 28px 20px 24px;
+    border-radius: 16px;
+  }
+  .auth-heading {
+    font-size: 1.15rem;
   }
 }
